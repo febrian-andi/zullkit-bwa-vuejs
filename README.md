@@ -1,3 +1,7 @@
+# Result : https://zullkit-bwa.netlify.app/
+<br>
+<br> 
+
 # web-vuejs-zullkit-bwa
 
 This template should help get you started developing with Vue 3 in Vite.
