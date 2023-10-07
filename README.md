@@ -1,6 +1,5 @@
 # Result : https://zullkit-bwa.netlify.app/
 <br>
-<br> 
 
 # web-vuejs-zullkit-bwa
 
