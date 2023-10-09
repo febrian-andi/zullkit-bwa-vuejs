@@ -12,33 +12,42 @@ const form = ref({
     email: '',
     password: '',
     title: 'Designer',
-})
+});
+
+const registerError = ref('');
 
 async function register() {
-  try {
-    const response = await axios.post('https://zullkit-backend.demo.belajarkoding.com/api/register', {
+    try {
+        const response = await axios.post('https://zullkit-backend.demo.belajarkoding.com/api/register', {
             name: form.value.name,
             email: form.value.email,
             password: form.value.password,
             title: form.value.title,
         }
-    );
-    console.log(response.data);
+        );
+        console.log(response.data);
 
-    localStorage.setItem('access_token', response.data.data.access_token);
-    localStorage.setItem('token_type', response.data.data.token_type);
+        localStorage.setItem('access_token', response.data.data.access_token);
+        localStorage.setItem('token_type', response.data.data.token_type);
 
-    userStore.fetchUser();
-    router.push("/");
+        userStore.fetchUser();
+        registerError.value = '';
+        router.push("/");
 
-  } catch (error) {
-    console.log(error);
-  }
+    } catch (error) {
+        console.log(error);
+        if (error.response && error.response.status == 500) {
+            registerError.value = 'Email is already in use';
+        }
+    }
 }
 </script>
 
 <template>
     <form>
+        <div v-if="registerError" class="bg-red-200 bg-opacity-30 border-0 text-red-500 rounded-lg p-2 mb-3">
+            {{ registerError }}
+        </div>
         <div class="mb-4">
             <label class="block mb-1" for="name">Name</label>
             <input v-model="form.name" placeholder="Type your full name" id="name" type="text" name="name"
@@ -51,7 +60,8 @@ async function register() {
         </div>
         <div class="mb-4">
             <label class="block mb-1" for="password">Password</label>
-            <input @keyup.enter="register" v-model="form.password" placeholder="Type your password" id="password" type="password" name="password" autocomplete="current-password"
+            <input @keyup.enter="register" v-model="form.password" placeholder="Type your password" id="password"
+                type="password" name="password" autocomplete="current-password"
                 class="block w-full py-3 mt-2 border border-gray-300 rounded-full shadow-sm px-7 focus:border-indigo-300 focus:outline-none focus:ring focus:ring-indigo-200 focus:ring-opacity-50 disabled:bg-gray-100" />
         </div>
         <div class="mt-6">
@@ -59,8 +69,7 @@ async function register() {
                 class="inline-flex items-center justify-center w-full px-8 py-3 text-base font-medium text-white bg-indigo-600 border border-transparent rounded-full hover:bg-indigo-700 md:py-2 md:text-lg md:px-10 hover:shadow">
                 Continue Sign Up
             </button>
-            <RouterLink to="/login"
-                class="inline-flex items-center justify-center w-full px-8 py-3 mt-2 text-base font-medium text-black bg-gray-200 border border-transparent rounded-full hover:bg-gray-300 md:py-2 md:text-lg md:px-10 hover:shadow">
+            <RouterLink to="/login" class="inline-flex items-center justify-center w-full px-8 py-3 mt-2 text-base font-medium text-black bg-gray-200 border border-transparent rounded-full hover:bg-gray-300 md:py-2 md:text-lg md:px-10 hover:shadow">
                 Sign In
             </RouterLink>
         </div>
